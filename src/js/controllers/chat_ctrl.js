@@ -94,6 +94,9 @@ var ChatController = {
 
 		ChatController.recipient = element.dataset;
 
+		TasksController.subscribeMyTasks();
+		TasksController.subscribeTheirTasks();
+
 		var chatroomId = null;
 
 		for(var objectId in ChatController.ChatroomChannel.objects) {
@@ -105,7 +108,7 @@ var ChatController = {
 				chatroomId = ChatController.ChatroomChannel.objects[objectId].id;
 			}
 		}
-
+		
 		if (chatroomId !== null) {
 			ChatController.subscribeChatMessages(chatroomId);
 			ChatController.currentChatroom = ChatController.ChatroomChannel.objects[chatroomId];
@@ -394,6 +397,7 @@ var ChatController = {
 		});
 		ChatController.getUsers();
 		ChatController.subscribeChatrooms();
+		TasksController.render();
 		$('#logout_btn').on('click', function() {
 			location.reload();
 		});

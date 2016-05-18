@@ -1,0 +1,616 @@
+body
+    background #62adbe;
+    background -moz-linear-gradient(left, #62adbe 0%, #a7c5b8 100%);
+    background webkit-linear-gradient(left, #62adbe 0%,#a7c5b8 100%);
+    background linear-gradient(to right, #62adbe 0%,#a7c5b8 100%);
+    font-family 'Open Sans'
+    font-weight 400
+    font-color #464545
+    margin 0
+    height 100%
+    width 100%
+
+body.chat
+    background #464545
+
+strong
+    font-weight: 800
+
+.hideit
+    display: none !important
+
+img
+    -webkit-user-select none
+    -moz-user-select none
+    -ms-user-select none
+    user-select none
+
+::-webkit-scrollbar-track
+    border-radius 2px
+    background-color #f5f5f5
+
+::-webkit-scrollbar
+    width 4px
+    background-color rgba(0,0,0,0.2)
+
+::-webkit-scrollbar-thumb
+    border-radius 2px
+    background-color rgba(0,0,0,0.3)
+
+#login_box
+    width 368px
+    height 300px
+    position relative
+    top 160px
+    margin 0 auto 0 auto
+    background-color white
+
+#built_with
+    width 99px
+    height 17px
+    position relative
+    top 265px
+    right 18px
+    float right
+    margin 0
+
+#task_name
+    width 138px
+    height 38px
+    position relative
+    top 72px
+    margin 0 0 0 115px
+
+#login_btn
+    &:active
+        color #4F6BA5
+        background-color white
+        border-color #4F6BA5
+        border-width 1px
+        border-style solid
+
+    width 190px
+    height 34px
+    color white
+    background-color #4F6BA5
+    text-transform uppercase
+    position relative
+    font-size 13px
+    font-weight 600
+    top 120px
+    border 0
+    border-radius 4px
+    margin 0 0 0 89px
+    outline none
+
+#main_container
+    height 768px
+    width 1170px
+    margin 30px auto 30px auto
+
+.panes
+    background-color #F6F6F6
+
+#user_list_container
+    display inline-block
+    height inherit
+    width 270px
+    margin 0
+
+#user_list_header
+    background #62adbe;
+    background -moz-linear-gradient(left, #62adbe 0%, #a7c5b8 100%);
+    background webkit-linear-gradient(left, #62adbe 0%,#a7c5b8 100%);
+    background linear-gradient(to right, #62adbe 0%,#a7c5b8 100%);
+    width 270px
+    height 70px
+
+#user_list
+    display block
+    position static
+    height: 698px;
+
+#user_list > ul
+    list-style none
+    display block
+    position fixed
+    margin 0
+    padding 0 0 0 0
+    overflow-y scroll
+    overflow-x hidden
+    height inherit
+    width 270px
+
+#user_list > ul > :first-child
+    top 0
+
+li.user_element
+    &:hover
+        background-color #F6F6F6
+        cursor pointer
+
+    background-color white
+    width 270px
+    min-height 70px
+    display block
+    position relative
+    margin 0
+    margin-top -1px
+    border 1px #D9D9D9 solid
+    top -1px
+    font-size 14px
+
+li.selected
+    background-color #F6F6F6
+
+img.user_avatar
+    width 40px
+    height 40px
+    border-radius 20px
+    position relative
+    left 20px
+    top 15px
+    display inline-block
+
+span.user_name
+    padding 0
+    position relative
+    display inline-block
+    left 35px
+    top 15px
+    word-break break-word
+    max-width 185px
+    vertical-align middle
+
+#logo_navbar
+    width 75px
+    height 21px
+    display block
+    position relative
+    left 20px
+    top 24px
+
+#logout_btn
+    &:hover
+        background-image url('/dist/assets/icon_log_out_hover.png');
+    background-image url('/dist/assets/icon_log_out.png')
+    background-color transparent
+    width: 18px
+    height: 18px
+    float: right
+    position relative
+    right 20px
+    border none
+    outline none
+    display block
+    top 5px
+
+#chat_pane
+    display inline-block
+    height inherit
+    width 470px
+    margin 0
+    position relative
+    left 30px
+
+#chat_header
+    width inherit
+    height 40px
+    display block
+    position relative
+    background-color white
+    color #8F8F8F
+    font-size 13px
+    margin 0
+    border-bottom 1px #D9D9D9 solid
+
+#chat_messages
+    width 428px
+    height 628px
+    margin 0 auto 0 auto
+    border 1px #D9D9D9 solid
+    top 20px
+    position relative
+    background-color white
+    overflow-y scroll
+    overflow-x hidden
+    display block
+    float left
+    left 20px
+
+#message_input_container
+    width 428px
+    height 40px
+    margin 0 auto 0 auto
+    position relative
+    top 40px
+
+#message_input_container > input
+    width 388px
+    height inherit
+    margin 0
+    position relative
+    outline none
+    border 1px #D9D9D9 solid
+    padding-left 15px
+    float left
+
+#send_msg_button
+    &:hover
+        background-color #62ADBE
+    position relative
+    float right
+    background-image url('/dist/assets/icon_send.png')
+    background-position center
+    background-repeat no-repeat
+    background-color #CCC
+    outline none
+    border none
+    width 40px
+    height 40px
+
+.message_to
+    width 388px
+    height auto
+    position relative
+    display block
+    float left
+    left 20px
+    padding-bottom 32px
+
+.message_from
+    width 388px
+    height auto
+    position relative
+    display block
+    float right
+    right 20px
+    padding-bottom 20px
+
+.repeated
+    padding-bottom 4px
+    right 84px
+
+.repeated_to
+    padding-bottom 4px
+    left 84px
+
+.message_delivered
+    float right
+    display inline-block
+    position relative
+    color #a1a1a1
+    font-size 13px
+    width inherit
+    height auto
+    top 10px
+
+.message_delivered > span
+    float right
+    right 80px
+    position relative
+
+#chat_messages > :first-child
+    margin-top 20px
+
+.message_user_avatar_to
+    width 40px
+    height 40px
+    position relative
+    margin 0
+    border-radius 20px
+    top 20px
+
+.message_user_avatar_from
+    width 40px
+    height 40px
+    position relative
+    margin 0
+    border-radius 20px
+    top 20px
+    float right
+
+.chat_bubble_to
+    background-color #e2ece8
+    display inline-block
+    position relative
+    left -13px
+    height auto
+    padding 10px 12px 8px 15px
+    border-radius 20px
+    max-width 321px
+    z-index 1
+    top 2px
+
+.chat_bubble_from
+    background-color #62ADBE
+    display inline-block
+    position relative
+    right -13px
+    height auto
+    padding 10px 12px 8px 15px
+    border-radius 20px
+    max-width 321px
+    z-index 1
+    top 2px
+    float right
+
+.chat_bubble_to > span
+    color #464646
+    font-size 15px
+    font-weight 400
+    white-space pre-wrap
+
+.chat_bubble_from > span
+    color white
+    font-size 15px
+    font-weight 400
+    white-space pre-wrap
+
+.chat_tail_to
+    width 27px
+    height 18px
+    display inline-block
+    position relative
+    top 10px
+    left 10px
+
+.chat_tail_from
+    width 27px
+    height 18px
+    display inline-block
+    float right
+    position relative
+    top 23px
+    right 10px
+
+.time_delimiter
+    width 428px
+    height 40px
+    text-align center
+    position relative
+    display table
+    top 38px
+    font-size 13px
+
+.time_delimiter > span
+    color #a1a1a1
+    position relative
+    display inline
+    bottom 30px
+
+#is_typing_indicator
+    position relative
+    display flex
+    left 15px
+    height 8px
+    width inherit
+    margin-bottom 20px
+
+#is_typing_indicator > img
+    position relative
+    display inline-block
+    margin-left 9px
+    width 8px
+    height 8px
+
+#chat_header > span
+    position relative
+    left 20px
+    display table
+    top 10px
+
+#tasks
+    display inline-block
+    height inherit
+    width 368px
+    margin 0
+    position relative
+    left 60px
+
+#tasks_from
+    display block
+    height 339px
+    width inherit
+    margin 0
+    position relative
+    background-color white
+
+.tasks_header
+    display block
+    float left
+    color #8F8F8F
+    background-color #f6f6f6
+    font-size 13px
+    height 40px
+    width inherit
+    border-bottom 1px #D9D9D9 solid
+
+.tasks_header > span
+    position relative
+    top 10px
+    left 15px
+
+#tasks_to
+    display block
+    height 397px
+    width inherit
+    margin 0
+    position relative
+    top 30px
+    background-color white
+
+.task_container
+    width inherit
+    height 299px
+    position relative
+    display table-caption
+    overflow-y scroll
+    overflow-x hidden
+
+#tasks_to > .task_container
+    height 237px
+
+.task
+    width inherit
+    min-height 48px
+    position relative
+    display block
+    border 1px #D9D9D9 solid
+    margin-top -1px
+
+img.checkbox
+    width 18px
+    height 18px
+    position relative
+    left 20px
+    cursor pointer
+    margin 0
+    top 15px
+
+button.close-task
+    &:hover
+        background-image url('/dist/assets/icon_close_hover.png')
+    background-image url('/dist/assets/icon_close.png')
+    background-color transparent
+    border none
+    outline none
+    width 12px
+    height 12px
+    position relative
+    right 10px
+    float right
+    cursor pointer
+    display inline-block
+
+.task > span
+    position relative
+    left 50px
+    color #464545
+    font-size 15px
+    display inline-block
+    width 271px
+    bottom 5px
+    white-space pre-wrap
+
+.task > span.completed
+    color #8F8F8F
+    text-decoration line-through
+
+#no_contacts_online
+    width 270px
+    height auto
+    position relative
+    top 165px
+    display table
+
+#no_contacts_online > img
+    width 52px
+    height 52px
+    position relative
+    margin 0 auto 0 auto
+    top 0
+    margin-bottom 20px
+    display block
+
+#no_contacts_online > div
+    width 270px
+    height auto
+    position relative
+    text-align center
+    font-size 18px
+    font-weight 600
+    color #a1a1a1
+    cursor default
+
+#no_chat
+    width 470px
+    height auto
+    position relative
+    top 237px
+    display table
+
+#no_chat > img
+    width 52px
+    height 52px
+    position relative
+    margin 0 auto 0 auto
+    top 0
+    margin-bottom 20px
+    display block
+
+#no_chat > div
+    width 470px
+    height auto
+    position relative
+    text-align center
+    font-size 18px
+    font-weight 600
+    color #a1a1a1
+    cursor default
+
+.no_tasks
+    width 370px
+    height auto
+    position relative
+    top 98px
+    display table
+
+#tasks_to > .no_tasks
+    top 138px
+
+.no_tasks > img
+    width 52px
+    height 52px
+    position relative
+    margin 0 auto 0 auto
+    top 0
+    margin-bottom 20px
+    display block
+
+.no_tasks > div
+    width 370px
+    height auto
+    position relative
+    text-align center
+    font-size 18px
+    font-weight 600
+    color #a1a1a1
+    cursor default
+
+#new_task_container
+    width 368px
+    height 80px
+    margin 0 auto 0 auto
+    position relative
+    top 40px
+    background-color #F6F6F6
+    border-top 1px #D9D9D9 solid
+
+#new_task_container > input
+    width 288px
+    height 40px
+    margin 0
+    position relative
+    outline none
+    border 1px #D9D9D9 solid
+    padding-left 15px
+    float left
+    margin-top 20px
+    left 20px
+
+#add_task_btn
+    &:hover
+        background-color #62ADBE
+    position relative
+    float right
+    background-image url('/dist/assets/icon_add.png')
+    background-position center
+    background-repeat no-repeat
+    background-color #CCC
+    outline none
+    border none
+    width 40px
+    height 40px
+    margin-top 20px
+    right 20px
