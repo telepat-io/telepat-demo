@@ -9,4 +9,6 @@ $(document).ready(function() {
 
 	window.TelepatInstance = new Telepat();
 	window.TelepatInstance.setLogLevel('debug');
+	window.TelepatInstance.connect(TelepatConfig);
+	LoginController.render();
 });
