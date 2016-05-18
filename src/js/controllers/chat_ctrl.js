@@ -1,7 +1,7 @@
 var ChatController = {
 	render: function() {
 		$(document.body).addClass('chat');
-		$(document.body).load('chat.html', null, ChatController.ready);
+		$('#everything').load('chat.html', null, ChatController.ready);
 	},
 	getUsers: function() {
 		ChatController.usersChannel = TelepatInstance.subscribe({
@@ -108,7 +108,7 @@ var ChatController = {
 				chatroomId = ChatController.ChatroomChannel.objects[objectId].id;
 			}
 		}
-		
+
 		if (chatroomId !== null) {
 			ChatController.subscribeChatMessages(chatroomId);
 			ChatController.currentChatroom = ChatController.ChatroomChannel.objects[chatroomId];
@@ -399,6 +399,7 @@ var ChatController = {
 		ChatController.subscribeChatrooms();
 		TasksController.render();
 		$('#logout_btn').on('click', function() {
+			localStorage.hasLoggedOut = true;
 			location.reload();
 		});
 	}

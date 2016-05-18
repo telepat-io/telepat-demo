@@ -10,11 +10,30 @@ window.fbAsyncInit = function() {
 };
 var LoginController = {
 	render: function() {
-		$(document.body).load('login.html', null, LoginController.ready);
+		window.fbAsyncInit();
+		setTimeout(function() {
+			if (localStorage.hasLoggedOut == undefined || localStorage.hasLoggedOut == 'false') {
+				FB.getLoginStatus(function(response) {
+					console.log(response);
+					if (response.status === 'connected') {
+						localStorage.hasLoggedOut = false;
+						window.TelepatInstance.user.loginWithFacebook(response.authResponse.accessToken);
+						window.TelepatInstance.on('login', function() {
+							ChatController.render();
+						});
+					} else {
+						$('#everything').load('login.html', null, LoginController.ready);
+					}
+				});
+			} else {
+				$('#everything').load('login.html', null, LoginController.ready);
+			}
+		}, 500);
 	},
 	login_facebook: function() {
 		FB.login(function(response) {
 			if (response.authResponse) {
+				localStorage.hasLoggedOut = false;
 				window.TelepatInstance.user.loginWithFacebook(response.authResponse.accessToken);
 				window.TelepatInstance.on('login', function() {
 					ChatController.render();
