@@ -1,0 +1,20 @@
+#main_container
+    #user_list_container.panes
+        #user_list_header
+            img#logo_navbar(src='assets/logo_navbar.png' alt='Task Logo navbar')
+            button#logout_btn
+        #no_contacts_online
+            img(src='assets/placeholder_contacts.png' alt='no contacts online image')
+            div No contacts online.
+        #user_list.hideit
+            ul
+    #chat_pane.panes
+        #no_chat
+            img(src='assets/placeholder_chat.png', alt='please open chat conversation')
+            div Select a contact to start chatting.
+        #chat_header.hideit
+        #chat_messages.hideit
+        #message_input_container.hideit
+            input(type='text', placeholder='Type a message...')
+            button#send_msg_button
+    #tasks
