@@ -21,7 +21,7 @@ var config = {
         path: 'dist/'
     },
     html: {
-        src: ['./src/**.jade'],
+        src: ['./src/**.jade', './src/views/**.jade'],
         destination: 'dist/'
     },
     css: {
@@ -64,6 +64,26 @@ gulp.task('templates', function() {
         .pipe(jade({ locals: locs }))
         //.pipe(rename('index.html'))
         .pipe(gulp.dest(config.html.destination));
+});
+
+/*******************************************************************************
+ *  Stylus task (optional to change the name of the file)
+ */
+gulp.task('styles', function() {
+           gulp.src(config.css.src)
+               .pipe(plumber())
+               .pipe(stylus())
+               .pipe(rename('style.css'))
+               .pipe(gulp.dest(config.css.destination));
+});
+
+/*******************************************************************************
+ *  Javascript task
+ */
+gulp.task('scripts', function() {
+    gulp.src(config.js.src)
+        .pipe(plumber())
+        .pipe(gulp.dest(config.js.destination));
 });
 
 /*******************************************************************************
