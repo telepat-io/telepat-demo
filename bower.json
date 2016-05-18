@@ -1,0 +1,27 @@
+{
+  "name": "telepat-demo",
+  "description": "A demo showcasing telepat capabilities, based on FarhadG/bootstrap-jade-stylus-gulp-boilerplate",
+  "main": "gulpfile.js",
+  "authors": [
+    "Razvan Botea"
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "telepat",
+    "realtime",
+    "synchronization",
+    "api"
+  ],
+  "homepage": "http://telepat.io",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "telepat-js": "telepat-io/telepat-js#develop"
+  }
+}

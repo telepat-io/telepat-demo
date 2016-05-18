@@ -1,0 +1,40 @@
+{
+  "name": "telepat-demo",
+  "version": "0.0.1",
+  "description": "A demo showcasing telepat capabilities, based on FarhadG/bootstrap-jade-stylus-gulp-boilerplate",
+  "main": "gulpfile.js",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-jade": "^0.11.0",
+    "gulp-plumber": "^0.6.6",
+    "gulp-rename": "^1.2.0",
+    "gulp-stylus": "^2.0.0",
+    "gulp-util": "^3.0.2",
+    "gulp-webserver": "^0.9.0",
+    "opn": "^1.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gulp",
+    "build": "gulp build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/telepat-io/telepat-demo"
+  },
+  "keywords": [
+    "bootstrap",
+    "jade",
+    "stylus",
+    "gulp",
+    "boilerplate",
+    "seed"
+  ],
+  "author": "Razvan Botea",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/telepat-io/telepat-demo/issues"
+  },
+  "homepage": "http://telepat.io/"
+}
