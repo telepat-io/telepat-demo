@@ -123,8 +123,8 @@ var ChatController = {
 		//contains id,name,picture
 		ChatController.recipient = element.dataset;
 
-		TasksController.subscribeMyTasks();
-		TasksController.subscribeTheirTasks();
+		TasksController.subscribeTasks('MyTasksChannel');
+		TasksController.subscribeTasks('TheirTasksChannel');
 
 		var chatroomId = null;
 

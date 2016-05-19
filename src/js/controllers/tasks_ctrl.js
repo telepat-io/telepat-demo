@@ -6,16 +6,19 @@ var TasksController = {
 		$('#tasks').load('tasks.html', null, TasksController.ready);
 	},
 	/**
-	 * Subscribes to the tasks that the recipient has created for me
+	 * Subscribes to the my tasks and his tasks
+	 * @param {string} which Either MyTasksChannel or TheirTasksChannel
 	 */
-	subscribeMyTasks: function() {
+	subscribeTasks: function(which) {
+		var where = which == 'MyTasksChannel' ? 'from' : 'to';
+
 		//when we click on another user, need to unsubscribe to this channel and resubscribe to another one
-		if (TasksController.MyTasksChannel) {
+		if (TasksController[which]) {
 			$('.task_container').empty();
-			TasksController.MyTasksChannel.unsubscribe();
+			TasksController[which].unsubscribe();
 		}
 
-		TasksController.MyTasksChannel = TelepatInstance.subscribe({
+		TasksController[which] = TelepatInstance.subscribe({
 			channel: {
 				model: 'tasks',
 				context: TelepatConfig.contextId
@@ -24,20 +27,20 @@ var TasksController = {
 				and: [
 					{
 						is: {
-							user_id: ChatController.recipient.id,
-							recipient_id: TelepatInstance.user.id
+							user_id: where == 'from' ? ChatController.recipient.id : TelepatInstance.user.id,
+							recipient_id: where == 'from' ? TelepatInstance.user.id : ChatController.recipient.id
 						}
 					}
 				]
 			}
 		}, function() {
-			for(var id in TasksController.MyTasksChannel.objects) {
-				var task = TasksController.MyTasksChannel.objects[id];
+			for(var id in TasksController[which].objects) {
+				var task = TasksController[which].objects[id];
 
-				TasksController.insertTask(task, 'from');
+				TasksController.insertTask(task, where);
 			}
 
-			TasksController.MyTasksChannel.on('update', function(opType, id, object, patch) {
+			TasksController[which].on('update', function(opType, id, object, patch) {
 				if (opType == 'replace') {
 					//this happens when we click on the completed checkbox
 					if (patch.path == 'completed') {
@@ -45,52 +48,8 @@ var TasksController = {
 						$('.task[data-id="'+id+'"] > span').addClass('completed');
 					}
 				} else if (opType == 'add') {
-					TasksController.insertTask(object, 'from');
+					TasksController.insertTask(object, where);
 				//when tasks are deleted
-				} else if (opType == 'delete') {
-					$('.task[data-id="'+id+'"]').remove();
-				}
-			});
-		});
-	},
-	/**
-	 * Subscribe to tasks created by us for them
-	 */
-	subscribeTheirTasks: function() {
-		//when we click on another user, need to unsubscribe to this channel and resubscribe to another one
-		if (TasksController.TheirTasksChannel)
-			TasksController.TheirTasksChannel.unsubscribe();
-
-		TasksController.TheirTasksChannel = TelepatInstance.subscribe({
-			channel: {
-				model: 'tasks',
-				context: TelepatConfig.contextId
-			},
-			filters: {
-				and: [
-					{
-						is: {
-							user_id: TelepatInstance.user.id,
-							recipient_id: ChatController.recipient.id
-						}
-					}
-				]
-			}
-		}, function() {
-			for(var id in TasksController.TheirTasksChannel.objects) {
-				var task = TasksController.TheirTasksChannel.objects[id];
-
-				TasksController.insertTask(task, 'to');
-			}
-
-			TasksController.TheirTasksChannel.on('update', function(opType, id, object, patch) {
-				if (opType == 'replace') {
-					if (patch.path == 'completed') {
-						$('.task[data-id="'+id+'"] > .checkbox')[0].src = 'assets/check_mark_filled_green.png';
-						$('.task[data-id="'+id+'"] > span').addClass('completed');
-					}
-				} else if (opType == 'add') {
-					TasksController.insertTask(object, 'to');
 				} else if (opType == 'delete') {
 					$('.task[data-id="'+id+'"]').remove();
 				}
