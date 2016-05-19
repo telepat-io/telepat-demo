@@ -9,27 +9,34 @@ window.fbAsyncInit = function() {
 	});
 };
 var LoginController = {
+	/**
+	 * This function renders the login html fragment if the user isn't logged in with FB yet (or the session has
+	 * expired)
+	 */
 	render: function() {
 		window.fbAsyncInit();
-		setTimeout(function() {
-			if (localStorage.hasLoggedOut == undefined || localStorage.hasLoggedOut == 'false') {
-				FB.getLoginStatus(function(response) {
-					console.log(response);
-					if (response.status === 'connected') {
-						localStorage.hasLoggedOut = false;
-						window.TelepatInstance.user.loginWithFacebook(response.authResponse.accessToken);
-						window.TelepatInstance.on('login', function() {
-							ChatController.render();
-						});
-					} else {
-						$('#everything').load('login.html', null, LoginController.ready);
-					}
-				});
-			} else {
-				$('#everything').load('login.html', null, LoginController.ready);
-			}
-		}, 500);
+		if (localStorage.hasLoggedOut == undefined || localStorage.hasLoggedOut == 'false') {
+			FB.getLoginStatus(function(response) {
+
+				if (response.status === 'connected') {
+					localStorage.hasLoggedOut = false;
+					//Logs the user into Telepat using FB credentials (access_token)
+					window.TelepatInstance.user.loginWithFacebook(response.authResponse.accessToken);
+					//after logging in, the chat interface is rendered
+					window.TelepatInstance.on('login', function() {
+						ChatController.render();
+					});
+				} else {
+					$('#everything').load('login.html', null, LoginController.ready);
+				}
+			});
+		} else {
+			$('#everything').load('login.html', null, LoginController.ready);
+		}
 	},
+	/**
+	 * Function attached to the click event on the main Login button
+	 */
 	login_facebook: function() {
 		FB.login(function(response) {
 			if (response.authResponse) {
@@ -43,6 +50,9 @@ var LoginController = {
 			scope: 'public_profile,email,user_about_me,user_friends'
 		});
 	},
+	/**
+	 * Function called after the login html fragment has been loaded
+	 */
 	ready: function() {
 		LoginController.login_button = $('#login_btn');
 		LoginController.login_button.on('click', LoginController.login_facebook);
