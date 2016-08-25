@@ -22,6 +22,6 @@
     "tests"
   ],
   "dependencies": {
-    "telepat-js": "telepat-io/telepat-js#develop"
+    "telepat-js": "telepat-io/telepat-js#es6"
   }
 }

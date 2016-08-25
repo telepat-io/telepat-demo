@@ -18,7 +18,7 @@ var config = {
     server: {
         host: '0.0.0.0',
         port: '3000',
-        path: 'dist/'
+        path: './dist/'
     },
     html: {
         src: ['./src/**.jade', './src/views/**.jade'],
@@ -38,11 +38,11 @@ var config = {
  *  Webserver up and running
  */
 gulp.task('webserver', function() {
-    gulp.src('.')
+    gulp.src(config.server.path)
         .pipe(webserver({
             host: config.server.host,
             port: config.server.port,
-            livereload: false,
+            livereload: true,
             directoryListing: false
         }));
 });
@@ -51,7 +51,7 @@ gulp.task('webserver', function() {
  *  Open the browser
  */
 gulp.task('openbrowser', function() {
-    opn('http://'+ config.server.host +':'+ config.server.port + config.server.path);
+    opn('http://'+ config.server.host +':'+ config.server.port);
 });
 
 /*******************************************************************************
