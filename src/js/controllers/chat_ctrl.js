@@ -54,7 +54,7 @@ var ChatController = {
 		var listItem = document.createElement('li');
 		listItem.className = 'user_element';
 		listItem.dataset.id = user.id;
-		listItem.dataset.name = user.name;
+		listItem.dataset.name = user.name || (user.firstName + ' ' + user.lastName);
 		listItem.dataset.picture = user.picture;
 
 		listItem.addEventListener('click', ChatController.initChat);
@@ -66,10 +66,10 @@ var ChatController = {
 
 		var userName = document.createElement('span');
 		userName.classList = 'user_name';
-		userName.innerHTML = user.name.split(' ')[0]+' ';
+		userName.innerHTML = user.name ? (user.name.split(' ')[0]+' ') : (user.firstName+' ');
 
 		var boldName = document.createElement('strong');
-		boldName.innerHTML = user.name.split(' ')[1];
+		boldName.innerHTML = user.name ? user.name.split(' ')[1] : user.lastName;
 		userName.appendChild(boldName);
 
 		listItem.appendChild(userImage);
