@@ -35,7 +35,7 @@ var ChatController = {
 	updateUserList: function() {
 		if (Object.keys(ChatController.usersChannel.objects).length) {
 			for(var userId in ChatController.usersChannel.objects) {
-				if (userId !== TelepatInstance.user.id)
+				if (userId !== TelepatInstance.user.data.id)
 					ChatController.insertUser(ChatController.usersChannel.objects[userId]);
 			}
 		}
@@ -136,7 +136,7 @@ var ChatController = {
 			var p2 = ChatController.ChatroomChannel.objects[objectId].participant_2;
 
 			if ((p1 == ChatController.recipient.id || p2 == ChatController.recipient.id) &&
-					(p1 == TelepatInstance.user.id || p2 == TelepatInstance.user.id)) {
+					(p1 == TelepatInstance.user.data.id || p2 == TelepatInstance.user.data.id)) {
 				chatroomId = ChatController.ChatroomChannel.objects[objectId].id;
 			}
 		}
@@ -148,7 +148,7 @@ var ChatController = {
 		} else {
 			//there's no chatroom with these two people, we need to create the chatroom
 			ChatController.ChatroomChannel.objects['new'] = {
-				participant_1: TelepatInstance.user.id,
+				participant_1: TelepatInstance.user.data.id,
 				participant_2: ChatController.recipient.id,
 				context_id: TelepatConfig.contextId
 			};
@@ -167,8 +167,8 @@ var ChatController = {
 				or: [
 					{
 						is: {
-							participant_1: TelepatInstance.user.id,
-							participant_2: TelepatInstance.user.id
+							participant_1: TelepatInstance.user.data.id,
+							participant_2: TelepatInstance.user.data.id
 						}
 					}
 				]
@@ -182,7 +182,7 @@ var ChatController = {
 					ChatController.currentChatroom = ChatController.ChatroomChannel.objects[id];
 				} else if (opType == 'replace') {
 					//changes on this field name indicate when the other user is typing
-					var isTypingField = ChatController.currentChatroom.user_id == TelepatInstance.user.id ? 'recipient_is_typing' : 'sender_is_typing';
+					var isTypingField = ChatController.currentChatroom.user_id == TelepatInstance.user.data.id ? 'recipient_is_typing' : 'sender_is_typing';
 
 					if (isTypingField == patch.path) {
 						if (ChatController.ChatroomChannel.objects[id][patch.path] == true) {
@@ -219,8 +219,8 @@ var ChatController = {
 
 		if (!chatroomId)
 			for(var objectId in ChatController.ChatroomChannel.objects) {
-				if (ChatController.ChatroomChannel.objects[objectId].participant_1 == TelepatInstance.user.id ||
-						ChatController.ChatroomChannel.objects[objectId].participant_2 == TelepatInstance.user.id) {
+				if (ChatController.ChatroomChannel.objects[objectId].participant_1 == TelepatInstance.user.data.id ||
+						ChatController.ChatroomChannel.objects[objectId].participant_2 == TelepatInstance.user.data.id) {
 					chatroomId = ChatController.ChatroomChannel.objects[objectId].id;
 				}
 			}
@@ -239,7 +239,7 @@ var ChatController = {
 		}, function() {
 			//inserting messages into the DOM from the initial subscribe
 			for(var msgId in ChatController.MessagesChannel.objects) {
-				if (ChatController.MessagesChannel.objects[msgId].user_id == TelepatInstance.user.id)
+				if (ChatController.MessagesChannel.objects[msgId].user_id == TelepatInstance.user.data.id)
 					ChatController.insertFromMessage(ChatController.MessagesChannel.objects[msgId]);
 				else
 					ChatController.insertToMessage(ChatController.MessagesChannel.objects[msgId]);
@@ -249,7 +249,7 @@ var ChatController = {
 		ChatController.MessagesChannel.on('update', function(opType, id, message, patch) {
 			if (opType == 'add') {
 				//if it's my message
-				if (message.user_id == TelepatInstance.user.id)	{
+				if (message.user_id == TelepatInstance.user.data.id)	{
 					ChatController.insertFromMessage(message);
 				} //otherwise it's his/hers message
 				else {
@@ -265,9 +265,9 @@ var ChatController = {
 				}
 			} else if (opType == 'replace') {
 				//this is how we capture the 'received' and 'seen' changes on each message
-				if (patch.path == 'received' && ChatController.MessagesChannel.objects[id].user_id == TelepatInstance.user.id)
+				if (patch.path == 'received' && ChatController.MessagesChannel.objects[id].user_id == TelepatInstance.user.data.id)
 					ChatController.setMessageDelivered(id);
-				else if (patch.path == 'seen' && ChatController.MessagesChannel.objects[id].user_id == TelepatInstance.user.id) {
+				else if (patch.path == 'seen' && ChatController.MessagesChannel.objects[id].user_id == TelepatInstance.user.data.id) {
 					ChatController.setSeen();
 				}
 			}
@@ -400,7 +400,7 @@ var ChatController = {
 			messageContainer.appendChild($('.chat_tail_from').first().remove()[0]);
 		} else {
 			var userImage = document.createElement('img');
-			userImage.src = TelepatInstance.user.picture;
+			userImage.src = TelepatInstance.user.data.picture;
 			userImage.alt = 'user avatar';
 			userImage.classList = 'message_user_avatar_from';
 			messageContainer.appendChild(userImage);
@@ -421,14 +421,14 @@ var ChatController = {
 	 * sends the is typing property on the chatroom that tells when the other participant has started typing
 	 */
 	sendIsTyping: function() {
-		var isTypingField = ChatController.currentChatroom.user_id == TelepatInstance.user.id ? 'sender_is_typing' : 'recipient_is_typing';
+		var isTypingField = ChatController.currentChatroom.user_id == TelepatInstance.user.data.id ? 'sender_is_typing' : 'recipient_is_typing';
 		ChatController.ChatroomChannel.objects[ChatController.currentChatroom.id][isTypingField] = true;
 	},
 	/**
 	 * clears this flag when at least 1 second has passed since the last key pressed
 	 */
 	clearIsTyping: function() {
-		var isTypingField = ChatController.currentChatroom.user_id == TelepatInstance.user.id ? 'sender_is_typing' : 'recipient_is_typing';
+		var isTypingField = ChatController.currentChatroom.user_id == TelepatInstance.user.data.id ? 'sender_is_typing' : 'recipient_is_typing';
 		ChatController.ChatroomChannel.objects[ChatController.currentChatroom.id][isTypingField] = false;
 		ChatController.isTypingTimeout = null;
 	},

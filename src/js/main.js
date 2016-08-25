@@ -9,7 +9,10 @@ $(document).ready(function() {
 			window.TelepatInstance = new Telepat();
 			window.TelepatInstance.setLogLevel('debug');
 			window.TelepatInstance.connect(TelepatConfig);
-			LoginController.render();
+			var callbackId = window.TelepatInstance.on('connect', function() {
+				window.TelepatInstance.removeCallback('connect', callbackId);
+				LoginController.render();
+			});
 		});
 
 		fjs.parentNode.insertBefore(js, fjs);

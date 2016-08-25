@@ -16,21 +16,25 @@ var opn = require('opn');
 var config = {
     watch: './src/**/*.*',
     server: {
-        host: '0.0.0.0',
-        port: '3000',
-        path: './dist/'
+        host: '192.168.1.29',
+        port: '3130',
+        path: './dist'
     },
     html: {
         src: ['./src/**.jade', './src/views/**.jade'],
-        destination: 'dist/'
+        destination: './dist'
     },
     css: {
         src: './src/styles/style.styl',
-        destination: 'dist/css'
+        destination: './dist/css'
     },
     js: {
         src: ['./src/js/**', './bower_components/telepat-js/dist/*'],
-        destination: 'dist/js'
+        destination: './dist/js'
+    },
+    assets: {
+        src: './src/assets/**',
+        destination: './dist/assets'
     }
 };
 
@@ -42,7 +46,7 @@ gulp.task('webserver', function() {
         .pipe(webserver({
             host: config.server.host,
             port: config.server.port,
-            livereload: true,
+            livereload: false,
             directoryListing: false
         }));
 });
@@ -87,6 +91,14 @@ gulp.task('scripts', function() {
 });
 
 /*******************************************************************************
+ *  Assets task
+ */
+gulp.task('assets', function() {
+    gulp.src(config.assets.src)
+        .pipe(gulp.dest(config.assets.destination));
+});
+
+/*******************************************************************************
  *  Watch task
  */
 gulp.task('watch', function() {
@@ -97,5 +109,5 @@ gulp.task('watch', function() {
 /*******************************************************************************
  *  Command line task commands
  */
-gulp.task('build', ['templates', 'styles', 'scripts']);
+gulp.task('build', ['templates', 'styles', 'scripts', 'assets']);
 gulp.task('default', ['build', 'webserver', 'watch', 'openbrowser']);

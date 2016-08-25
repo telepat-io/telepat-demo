@@ -1,8 +1,9 @@
 var TelepatConfig = {
-	apiKey: 'api test key',
-	appId: 'c0a95b77-069e-48e4-ba2c-ff9f2c613742',
+	apiKey: '6f96df0f-ab2a-4ad3-9943-a47670808729',
+	appId: '41f47e1c-22c4-43c0-81a2-5d919b59dc07',
 	apiEndpoint: 'http://stress-api.cloudapp.net:3000',
 	socketEndpoint: 'http://stress-workers.cloudapp.net',
 	timerInterval: 150,
-	contextId: 'c9ebecee-f0e5-4c0c-a854-d0bfa157f768'
+	contextId: '06dc6b1e-2eff-4b1d-bf5a-84d6ed4d347d',
+	facebookAppId: '1743490645916155'
 };
