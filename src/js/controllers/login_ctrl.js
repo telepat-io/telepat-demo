@@ -1,6 +1,6 @@
 window.fbAsyncInit = function() {
 	FB.init({
-		appId   : '166264107105072',
+		appId   : TelepatConfig.facebookAppId,
 		oauth   : true,
 		status  : true, // check login status
 		cookie  : true, // enable cookies to allow the server to access the session

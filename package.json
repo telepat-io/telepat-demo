@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "A demo showcasing telepat capabilities, based on FarhadG/bootstrap-jade-stylus-gulp-boilerplate",
   "main": "gulpfile.js",
-  "dependencies": {},
+  "dependencies": {
+    "pug": "^2.0.0-beta5"
+  },
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-jade": "^0.11.0",
