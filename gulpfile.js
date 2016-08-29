@@ -16,7 +16,7 @@ var opn = require('opn');
 var config = {
     watch: './src/**/*.*',
     server: {
-        host: '192.168.1.29',
+        host: '0.0.0.0',
         port: '3130',
         path: './dist'
     },

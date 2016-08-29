@@ -1,3 +1,6 @@
+html
+    height 100%
+
 body
     background #62adbe;
     background -moz-linear-gradient(left, #62adbe 0%, #a7c5b8 100%);
@@ -7,11 +10,18 @@ body
     font-weight 400
     font-color #464545
     margin 0
+    padding 0
     height 100%
     width 100%
 
 body.chat
     background #464545
+    height 100%
+    margin 0
+    padding 0
+
+#everything
+    height 100%
 
 strong
     font-weight: 800
@@ -84,16 +94,19 @@ img
     outline none
 
 #main_container
-    height 768px
+    height 100%
     width 1170px
-    margin 30px auto 30px auto
+    margin 0 auto
+    position relative
 
 .panes
     background-color #F6F6F6
 
 #user_list_container
-    display inline-block
-    height inherit
+    position absolute
+    top 30px
+    left 0
+    bottom 30px
     width 270px
     margin 0
 
@@ -106,19 +119,18 @@ img
     height 70px
 
 #user_list
-    display block
-    position static
-    height: 698px;
+    position absolute
+    top 70px
+    left 0
+    right 0
+    bottom 0
 
 #user_list > ul
     list-style none
-    display block
-    position fixed
     margin 0
     padding 0 0 0 0
-    overflow-y scroll
     overflow-x hidden
-    height inherit
+    height 100%
     width 270px
 
 #user_list > ul > :first-child
@@ -165,33 +177,35 @@ span.user_name
 #logo_navbar
     width 75px
     height 21px
-    display block
-    position relative
+    position absolute
     left 20px
     top 24px
 
 #logout_btn
     &:hover
-        background-image url('/assets/icon_log_out_hover.png');
-    background-image url('/assets/icon_log_out.png')
+        background-image url('/assets/icon_log_out_hover@2x.png');
+    background-image url('/assets/icon_log_out@2x.png')
     background-color transparent
-    width: 18px
-    height: 18px
-    float: right
-    position relative
+    width 18px
+    height 18px
+    background-size 18px
+    position absolute
     right 20px
     border none
     outline none
     display block
-    top 5px
+    top 26px
+    
+
+
 
 #chat_pane
-    display inline-block
-    height inherit
     width 470px
     margin 0
-    position relative
-    left 30px
+    position absolute
+    left 300px
+    top 30px
+    bottom 30px
 
 #chat_header
     width inherit
@@ -206,30 +220,25 @@ span.user_name
 
 #chat_messages
     width 428px
-    height 628px
-    margin 0 auto 0 auto
     border 1px #D9D9D9 solid
-    top 20px
-    position relative
-    background-color white
-    overflow-y scroll
-    overflow-x hidden
-    display block
-    float left
+    top 60px
+    bottom 80px
     left 20px
+    position absolute
+    background-color white
+    overflow-x hidden
 
 #message_input_container
     width 428px
     height 40px
-    margin 0 auto 0 auto
-    position relative
-    top 40px
+    position absolute
+    bottom 20px
+    left 20px
 
 #message_input_container > input
     width 388px
-    height inherit
+    height 40px
     margin 0
-    position relative
     outline none
     border 1px #D9D9D9 solid
     padding-left 15px
@@ -238,12 +247,12 @@ span.user_name
 #send_msg_button
     &:hover
         background-color #62ADBE
-    position relative
     float right
-    background-image url('/assets/icon_send.png')
+    background-image url('/assets/icon_send@2x.png')
     background-position center
     background-repeat no-repeat
     background-color #CCC
+    background-size 18px
     outline none
     border none
     width 40px
@@ -400,30 +409,30 @@ span.user_name
     display table
     top 10px
 
+
+
+
 #tasks
-    display inline-block
-    height inherit
     width 368px
     margin 0
-    position relative
-    left 60px
+    position absolute
+    left 800px
+    top 30px
+    bottom 30px
 
 #tasks_from
-    display block
-    height 339px
-    width inherit
-    margin 0
-    position relative
+    height 49%
+    position absolute
+    left 0
+    right 0
+    top 0
     background-color white
 
 .tasks_header
-    display block
-    float left
     color #8F8F8F
     background-color #f6f6f6
     font-size 13px
     height 40px
-    width inherit
     border-bottom 1px #D9D9D9 solid
 
 .tasks_header > span
@@ -432,65 +441,57 @@ span.user_name
     left 15px
 
 #tasks_to
-    display block
-    height 397px
-    width inherit
-    margin 0
-    position relative
-    top 30px
+    height 49%
+    position absolute
+    bottom 0
+    left 0
+    right 0
     background-color white
 
 .task_container
-    width inherit
-    height 299px
-    position relative
-    display table-caption
-    overflow-y scroll
+    position absolute
     overflow-x hidden
-
+    top 40px
+    left 0
+    right 0
+    bottom 0
+    
 #tasks_to > .task_container
-    height 237px
+    bottom 80px
 
 .task
-    width inherit
+    width 100%
     min-height 48px
-    position relative
-    display block
     border 1px #D9D9D9 solid
     margin-top -1px
 
 img.checkbox
     width 18px
     height 18px
-    position relative
-    left 20px
+    float left
+    margin 15px 0 0 20px
     cursor pointer
-    margin 0
-    top 15px
 
 button.close-task
     &:hover
-        background-image url('/assets/icon_close_hover.png')
-    background-image url('/assets/icon_close.png')
+        background-image url('/assets/icon_close_hover@2x.png')
+    background-image url('/assets/icon_close@2x.png')
     background-color transparent
+    background-size 12px
     border none
     outline none
     width 12px
     height 12px
-    position relative
-    right 10px
+    float right
+    margin 18px 10px 0 0;
     float right
     cursor pointer
-    display inline-block
 
 .task > span
-    position relative
-    left 50px
+    margin 13px 0 0 50px
     color #464545
     font-size 15px
-    display inline-block
-    width 271px
-    bottom 5px
+    float left
     white-space pre-wrap
 
 .task > span.completed
@@ -499,10 +500,7 @@ button.close-task
 
 #no_contacts_online
     width 270px
-    height auto
-    position relative
-    top 165px
-    display table
+    margin-top 165px
 
 #no_contacts_online > img
     width 52px
@@ -525,65 +523,42 @@ button.close-task
 
 #no_chat
     width 470px
-    height auto
-    position relative
-    top 237px
-    display table
+    padding-top 237px
 
 #no_chat > img
     width 52px
     height 52px
-    position relative
-    margin 0 auto 0 auto
-    top 0
-    margin-bottom 20px
+    margin 0 auto 20px
     display block
 
 #no_chat > div
-    width 470px
-    height auto
-    position relative
     text-align center
     font-size 18px
     font-weight 600
     color #a1a1a1
-    cursor default
 
 .no_tasks
     width 370px
-    height auto
-    position relative
-    top 98px
-    display table
-
-#tasks_to > .no_tasks
-    top 138px
+    margin-top 100px
 
 .no_tasks > img
     width 52px
     height 52px
-    position relative
-    margin 0 auto 0 auto
-    top 0
-    margin-bottom 20px
+    margin 0 auto 20px
     display block
 
 .no_tasks > div
-    width 370px
-    height auto
-    position relative
     text-align center
     font-size 18px
     font-weight 600
     color #a1a1a1
-    cursor default
 
 #new_task_container
-    width 368px
     height 80px
-    margin 0 auto 0 auto
-    position relative
-    top 40px
+    position absolute
+    bottom 0
+    left 0
+    right 0
     background-color #F6F6F6
     border-top 1px #D9D9D9 solid
 
@@ -591,26 +566,23 @@ button.close-task
     width 288px
     height 40px
     margin 0
-    position relative
     outline none
     border 1px #D9D9D9 solid
     padding-left 15px
     float left
-    margin-top 20px
-    left 20px
+    margin 20px 0 0 20px
 
 #add_task_btn
     &:hover
         background-color #62ADBE
-    position relative
     float right
-    background-image url('/assets/icon_add.png')
+    background-image url('/assets/icon_add@2x.png')
     background-position center
     background-repeat no-repeat
     background-color #CCC
+    background-size 18px
     outline none
     border none
     width 40px
     height 40px
-    margin-top 20px
-    right 20px
+    margin 20px 20px 0 0

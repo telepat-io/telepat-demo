@@ -57,15 +57,15 @@ var ChatController = {
 		listItem.dataset.name = user.name || (user.firstName + ' ' + user.lastName);
 		listItem.dataset.picture = user.picture;
 
-		listItem.addEventListener('click', ChatController.initChat);
+		$(listItem).on('click', function() { ChatController.initChat(listItem) });
 
 		var userImage = document.createElement('img');
 		userImage.src = user.picture;
 		userImage.alt = 'User avatar';
-		userImage.classList = 'user_avatar';
+		$(userImage).addClass('user_avatar');
 
 		var userName = document.createElement('span');
-		userName.classList = 'user_name';
+		$(userName).addClass('user_name');
 		userName.innerHTML = user.name ? (user.name.split(' ')[0]+' ') : (user.firstName+' ');
 
 		var boldName = document.createElement('strong');
@@ -81,19 +81,9 @@ var ChatController = {
 	 * Called each time we click on an user in the user list
 	 * @param {MouseEvent} event
 	 */
-	initChat: function(event) {
-		var element = null;
-
-		//sometimes the mouse click happens on one of the child of the li element
-		for(var i = 0; i < event.path.length; i++) {
-			if (event.path[i].constructor.name == 'HTMLLIElement') {
-				element = event.path[i];
-				break;
-			}
-		}
-
+	initChat: function(element) {
 		$('.selected').removeClass('selected');
-		element.classList += ' selected';
+		$(element).addClass('selected');
 
 		//first click, no click on the user was registered before this
 		if (!ChatController.recipient) {
@@ -168,7 +158,11 @@ var ChatController = {
 					{
 						is: {
 							participant_1: TelepatInstance.user.data.id,
-							participant_2: TelepatInstance.user.data.id
+						}
+					},
+					{
+						is: {
+							participant_2: TelepatInstance.user.data.id,
 						}
 					}
 				]
@@ -316,11 +310,11 @@ var ChatController = {
 		var chatContainer = $('#chat_messages');
 
 		var messageContainer = document.createElement('div');
-		messageContainer.classList = 'message_to';
+		$(messageContainer).addClass('message_to');
 		messageContainer.id = message.id;
 
 		var chatBubble = document.createElement('div');
-		chatBubble.classList = 'chat_bubble_to';
+		$(chatBubble).addClass('chat_bubble_to');
 
 		var textSpan = document.createElement('span');
 		textSpan.innerHTML = message.text;
@@ -336,13 +330,13 @@ var ChatController = {
 			var userImage = document.createElement('img');
 			userImage.src = ChatController.recipient.picture;
 			userImage.alt = 'user avatar';
-			userImage.classList = 'message_user_avatar_to';
+			$(userImage).addClass('message_user_avatar_to');
 			messageContainer.appendChild(userImage);
 
 			var chatTailImg = document.createElement('img');
 			chatTailImg.src = 'assets/chat_bg_green.png';
 			chatTailImg.alt = 'chat bubble tail';
-			chatTailImg.classList = 'chat_tail_to';
+			$(chatTailImg).addClass('chat_tail_to');
 			messageContainer.appendChild(chatTailImg);
 		}
 
@@ -382,11 +376,11 @@ var ChatController = {
 		var chatContainer = $('#chat_messages');
 
 		var messageContainer = document.createElement('div');
-		messageContainer.classList = 'message_from';
+		$(messageContainer).addClass('message_from');
 		messageContainer.id = message.id;
 
 		var chatBubble = document.createElement('div');
-		chatBubble.classList = 'chat_bubble_from';
+		$(chatBubble).addClass('chat_bubble_from');
 
 		var textSpan = document.createElement('span');
 		textSpan.innerHTML = message.text;
@@ -402,13 +396,13 @@ var ChatController = {
 			var userImage = document.createElement('img');
 			userImage.src = TelepatInstance.user.data.picture;
 			userImage.alt = 'user avatar';
-			userImage.classList = 'message_user_avatar_from';
+			$(userImage).addClass('message_user_avatar_from');
 			messageContainer.appendChild(userImage);
 
 			var chatTailImg = document.createElement('img');
 			chatTailImg.src = 'assets/chat_bg_blue.png';
 			chatTailImg.alt = 'chat bubble tail';
-			chatTailImg.classList = 'chat_tail_from';
+			$(chatTailImg).addClass('chat_tail_from');
 			messageContainer.appendChild(chatTailImg);
 		}
 
@@ -439,7 +433,7 @@ var ChatController = {
 	setMessageDelivered: function(msgId) {
 		$('.message_delivered').remove();
 		var deliveredContainer = document.createElement('div');
-		deliveredContainer.classList = 'message_delivered';
+		$(deliveredContainer).addClass('message_delivered');
 
 		var deliveredSpan = document.createElement('span');
 		deliveredSpan.textContent = 'Delivered';

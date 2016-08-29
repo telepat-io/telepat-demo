@@ -27,8 +27,12 @@ var TasksController = {
 				and: [
 					{
 						is: {
-							user_id: where == 'from' ? ChatController.recipient.id : TelepatInstance.user.id,
-							recipient_id: where == 'from' ? TelepatInstance.user.id : ChatController.recipient.id
+							user_id: where == 'from' ? ChatController.recipient.id : TelepatInstance.user.data.id,
+						}
+					},
+					{
+						is: {
+							recipient_id: where == 'from' ? TelepatInstance.user.data.id : ChatController.recipient.id
 						}
 					}
 				]
@@ -68,26 +72,27 @@ var TasksController = {
 		var container = $('#tasks_'+where+' > .task_container');
 
 		var taskContainer = document.createElement('div');
-		taskContainer.classList = 'task';
+		$(taskContainer).addClass('task');
 		taskContainer.dataset.id = task.id;
 
 		var checkboxImg = document.createElement('img');
-		checkboxImg.src = task.completed ? (task.user_id == TelepatInstance.user.id ?
+		checkboxImg.src = task.completed ? (task.user_id == TelepatInstance.user.data.id ?
 			'assets/check_mark_filled_blue.png' : 'assets/check_mark_filled_green.png') : 'assets/check_mark_empty.png';
 		checkboxImg.alt = 'checkbox';
-		checkboxImg.classList = 'checkbox';
+		$(checkboxImg).addClass('checkbox');
 
-		if (task.user_id != TelepatInstance.user.id)
+		if (task.user_id != TelepatInstance.user.data.id) {
 			$(checkboxImg).one('click', TasksController.completeTask);
+		}
 
 		var textSpan = document.createElement('span');
 		textSpan.innerHTML = task.text;
 
 		if (task.completed)
-			textSpan.classList = 'completed';
+			$(textSpan).addClass('completed');
 
 		var closeButton = document.createElement('button');
-		closeButton.classList = 'close-task';
+		$(closeButton).addClass('close-task');
 		closeButton.addEventListener('click', TasksController.removeTask);
 
 		taskContainer.appendChild(checkboxImg);
