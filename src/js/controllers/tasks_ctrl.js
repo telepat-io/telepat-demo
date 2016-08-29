@@ -20,8 +20,8 @@ var TasksController = {
 
 		TasksController[which] = TelepatInstance.subscribe({
 			channel: {
-				model: 'tasks',
-				context: TelepatConfig.contextId
+				model: 'task',
+				context: TelepatConfig.collectionId
 			},
 			filters: {
 				and: [

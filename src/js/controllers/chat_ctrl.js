@@ -140,7 +140,7 @@ var ChatController = {
 			ChatController.ChatroomChannel.objects['new'] = {
 				participant_1: TelepatInstance.user.data.id,
 				participant_2: ChatController.recipient.id,
-				context_id: TelepatConfig.contextId
+				context_id: TelepatConfig.collectionId
 			};
 		}
 	},
@@ -151,7 +151,7 @@ var ChatController = {
 		ChatController.ChatroomChannel = TelepatInstance.subscribe({
 			channel: {
 				model: 'chatroom',
-				context: TelepatConfig.contextId
+				context: TelepatConfig.collectionId
 			},
 			filters: {
 				or: [
@@ -221,7 +221,7 @@ var ChatController = {
 
 		ChatController.MessagesChannel = TelepatInstance.subscribe({
 			channel: {
-				model: 'messages',
+				model: 'message',
 				parent: {
 					model: 'chatroom',
 					id: chatroomId
@@ -277,7 +277,7 @@ var ChatController = {
 			ChatController.MessagesChannel.objects['new'] = {
 				text: textMessage,
 				recipient_id: ChatController.recipient.id,
-				context_id: TelepatConfig.contextId,
+				context_id: TelepatConfig.collectionId,
 				chatroom_id: ChatController.currentChatroom.id
 			}
 		}
