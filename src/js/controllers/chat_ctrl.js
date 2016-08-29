@@ -491,7 +491,7 @@ var ChatController = {
 				ChatController.sendIsTyping();
 			}
 
-			ChatController.isTypingTimeout = setTimeout(ChatController.clearIsTyping, 1000);
+			ChatController.isTypingTimeout = setTimeout(ChatController.clearIsTyping, 3000);
 		}).on('focus', function() {
 			//when putting the input in focus we send the seen flag unless the last message already has it
 			var message = ChatController.MessagesChannel.objects[ChatController.lastHisMessageId];
