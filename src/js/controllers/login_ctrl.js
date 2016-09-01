@@ -15,21 +15,25 @@ var LoginController = {
 	 */
 	render: function() {
 		window.fbAsyncInit();
+		//after logging in, the chat interface is rendered
+		window.TelepatInstance.on('login', function() {
+			ChatController.render();
+		});
+						
 		if (localStorage.hasLoggedOut == undefined || localStorage.hasLoggedOut == 'false') {
-			FB.getLoginStatus(function(response) {
-
-				if (response.status === 'connected') {
-					localStorage.hasLoggedOut = false;
-					//Logs the user into Telepat using FB credentials (access_token)
-					window.TelepatInstance.user.loginWithFacebook(response.authResponse.accessToken);
-					//after logging in, the chat interface is rendered
-					window.TelepatInstance.on('login', function() {
-						ChatController.render();
-					});
-				} else {
-					$('#everything').load('login.html', null, LoginController.ready);
-				}
-			});
+			if (window.TelepatInstance.user.canReauth) {
+				window.TelepatInstance.user.reauth();
+			} else {
+				FB.getLoginStatus(function(response) {
+					if (response.status === 'connected') {
+						localStorage.hasLoggedOut = false;
+						//Logs the user into Telepat using FB credentials (access_token)
+						window.TelepatInstance.user.loginWithFacebook(response.authResponse.accessToken);
+					} else {
+						$('#everything').load('login.html', null, LoginController.ready);
+					}
+				});
+			}
 		} else {
 			$('#everything').load('login.html', null, LoginController.ready);
 		}

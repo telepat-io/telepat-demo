@@ -55,7 +55,7 @@ gulp.task('webserver', function() {
  *  Open the browser
  */
 gulp.task('openbrowser', function() {
-    opn('http://'+ config.server.host +':'+ config.server.port);
+    setTimeout(function() {opn('http://'+ config.server.host +':'+ config.server.port);}, 500);
 });
 
 /*******************************************************************************

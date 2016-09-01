@@ -39,6 +39,7 @@ var ChatController = {
 					ChatController.insertUser(ChatController.usersChannel.objects[userId]);
 			}
 		}
+		ChatController.updateBadges();
 	},
 	/**
 	 * Inserts a user in the DOM
@@ -72,10 +73,37 @@ var ChatController = {
 		boldName.innerHTML = user.name ? user.name.split(' ')[1] : user.lastName;
 		userName.appendChild(boldName);
 
+		var badge = document.createElement('span');
+		$(badge).addClass('badge');
+		$(badge).addClass('hideit');
+		badge.setAttribute('id', 'badge-'+user.id);
+		badge.innerHTML = '1';
+
 		listItem.appendChild(userImage);
 		listItem.appendChild(userName);
+		listItem.appendChild(badge);
 
 		$('#user_list > ul').append(listItem);
+	},
+	/**
+	 * Update unread badges for all users
+	 */
+	updateBadges: function() {
+		for (var userId in ChatController.badgeCount) {
+			ChatController.updateBadgeCountForUser(userId);
+		}
+	},
+	/**
+	 * Update unread badge for a specific user
+	 */
+	updateBadgeCountForUser: function(id) {
+		var badgeElement = $('#badge-' + id);
+		if (ChatController.badgeCount[id] && ChatController.badgeCount[id] > 0) {
+			badgeElement.removeClass('hideit');
+			badgeElement.text(ChatController.badgeCount[id]);
+		} else {
+			badgeElement.addClass('hideit');
+		}
 	},
 	/**
 	 * Called each time we click on an user in the user list
@@ -112,6 +140,12 @@ var ChatController = {
 
 		//contains id,name,picture
 		ChatController.recipient = element.dataset;
+
+		//clear badge count for current recipient
+		if (ChatController.badgeCount) {
+			ChatController.badgeCount[ChatController.recipient.id] = 0;
+			ChatController.updateBadgeCountForUser(ChatController.recipient.id);
+		}
 
 		TasksController.subscribeTasks('MyTasksChannel');
 		TasksController.subscribeTasks('TheirTasksChannel');
@@ -205,6 +239,58 @@ var ChatController = {
 		});
 	},
 	/**
+	 * Subscribe to all incoming messages, so we can display unread notifications
+	 */
+	subscribeGeneralMessages: function() {
+		ChatController.AllMessagesChannel = TelepatInstance.subscribe({
+			channel: {
+				model: 'message',
+				context: TelepatConfig.collectionId
+			},
+			filters: {
+				and: [
+					{
+						is: {
+							recipient_id: TelepatInstance.user.data.id,
+						}
+					}
+				]
+			}
+		}, function() {
+			ChatController.badgeCount = {};
+			//iterate through all unseen messages, and construct the unread counts
+			for (var messageId in ChatController.AllMessagesChannel.objects) {
+				ChatController.AllMessagesChannel.objects[messageId].received = true;
+				if (!ChatController.AllMessagesChannel.objects[messageId].seen) {
+					var senderId = ChatController.AllMessagesChannel.objects[messageId].user_id;
+					if (!ChatController.badgeCount[senderId]) {
+						ChatController.badgeCount[senderId] = 1;
+					} else {
+						ChatController.badgeCount[senderId]++;
+					}
+				}
+			}
+			//update all chat badges based on the unread counts
+			ChatController.updateBadges();
+		});
+		ChatController.AllMessagesChannel.on('update', function(opType, id, object, patch) {
+			//set the message to received while we're online, even if we're not on the right channel
+			object.received = true;
+			if (!ChatController.recipient || object.user_id !== ChatController.recipient.id) {
+				if (opType === 'add') {
+					//there's a new message from a user different than the one we're chatting with, update the badge count
+					if (!ChatController.badgeCount[object.user_id]) {
+						ChatController.badgeCount[object.user_id] = 1;
+					} else {
+						ChatController.badgeCount[object.user_id]++;
+					}
+					ChatController.updateBadgeCountForUser(object.user_id);
+					ChatController.newMessageSound.play();
+				}
+			}
+		});
+	},
+	/**
 	 * Subscribe to the chatroom's messages
 	 * @param {string} chatroomId
 	 */
@@ -232,11 +318,14 @@ var ChatController = {
 			}
 		}, function() {
 			//inserting messages into the DOM from the initial subscribe
-			for(var msgId in ChatController.MessagesChannel.objects) {
-				if (ChatController.MessagesChannel.objects[msgId].user_id == TelepatInstance.user.data.id)
-					ChatController.insertFromMessage(ChatController.MessagesChannel.objects[msgId]);
+			for(var msgId = 0; msgId < ChatController.MessagesChannel.objectsArray.length; msgId++) {
+				if (ChatController.MessagesChannel.objectsArray[msgId].user_id == TelepatInstance.user.data.id)
+					ChatController.insertFromMessage(ChatController.MessagesChannel.objectsArray[msgId]);
 				else
-					ChatController.insertToMessage(ChatController.MessagesChannel.objects[msgId]);
+					ChatController.insertToMessage(ChatController.MessagesChannel.objectsArray[msgId]);
+
+				ChatController.MessagesChannel.objectsArray[msgId].received = true;
+				ChatController.MessagesChannel.objectsArray[msgId].seen = true;
 			}
 		});
 
@@ -274,6 +363,7 @@ var ChatController = {
 		var textMessage = $('#message_input_container > input')[0].value.trim();
 
 		if (textMessage) {
+			ChatController.clearIsTyping();
 			ChatController.MessagesChannel.objects['new'] = {
 				text: textMessage,
 				recipient_id: ChatController.recipient.id,
@@ -417,6 +507,7 @@ var ChatController = {
 	sendIsTyping: function() {
 		var isTypingField = ChatController.currentChatroom.user_id == TelepatInstance.user.data.id ? 'sender_is_typing' : 'recipient_is_typing';
 		ChatController.ChatroomChannel.objects[ChatController.currentChatroom.id][isTypingField] = true;
+		ChatController.isTypingTimeout = setTimeout(ChatController.clearIsTyping, 3000);
 	},
 	/**
 	 * clears this flag when at least 1 second has passed since the last key pressed
@@ -424,6 +515,7 @@ var ChatController = {
 	clearIsTyping: function() {
 		var isTypingField = ChatController.currentChatroom.user_id == TelepatInstance.user.data.id ? 'sender_is_typing' : 'recipient_is_typing';
 		ChatController.ChatroomChannel.objects[ChatController.currentChatroom.id][isTypingField] = false;
+		clearTimeout(ChatController.isTypingTimeout);
 		ChatController.isTypingTimeout = null;
 	},
 	/**
@@ -483,23 +575,23 @@ var ChatController = {
 		$('#message_input_container > input').on('keypress', function(event) {
 			if (event.which == 13) {
 				ChatController.sendMessage();
-			}
-			//if the user is typing and the timeout has already been set, we need to refresh it
-			if (ChatController.isTypingTimeout) {
+			} else if (ChatController.isTypingTimeout) {
+				//if the user is typing and the timeout has already been set, we need to refresh it
 				clearTimeout(ChatController.isTypingTimeout);
+				ChatController.isTypingTimeout = null;
 			} else {
 				ChatController.sendIsTyping();
 			}
-
-			ChatController.isTypingTimeout = setTimeout(ChatController.clearIsTyping, 3000);
 		}).on('focus', function() {
 			//when putting the input in focus we send the seen flag unless the last message already has it
 			var message = ChatController.MessagesChannel.objects[ChatController.lastHisMessageId];
 			if (message && !message.seen)
 				ChatController.MessagesChannel.objects[ChatController.lastHisMessageId].seen = true;
 		});
+		ChatController.newMessageSound = new Audio('assets/ding.mp3');
 		ChatController.getUsers();
 		ChatController.subscribeChatrooms();
+		ChatController.subscribeGeneralMessages();
 		TasksController.render();
 		$('#logout_btn').on('click', function() {
 			localStorage.hasLoggedOut = true;
