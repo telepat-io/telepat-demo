@@ -8,6 +8,10 @@
   "license": "Apache-2.0",
   "keywords": [
     "telepat",
+    "demo",
+    "chat",
+    "tasks",
+    "messaging",
     "realtime",
     "synchronization",
     "api"
@@ -22,6 +26,6 @@
     "tests"
   ],
   "dependencies": {
-    "telepat-js": "telepat-io/telepat-js#es6"
+    "telepat-js"
   }
 }
