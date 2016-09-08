@@ -510,7 +510,7 @@ var ChatController = {
 		ChatController.isTypingTimeout = setTimeout(ChatController.clearIsTyping, 3000);
 	},
 	/**
-	 * clears this flag when at least 1 second has passed since the last key pressed
+	 * clears this flag when at least 3 seconds have passed since the last key pressed
 	 */
 	clearIsTyping: function() {
 		var isTypingField = ChatController.currentChatroom.user_id == TelepatInstance.user.data.id ? 'sender_is_typing' : 'recipient_is_typing';

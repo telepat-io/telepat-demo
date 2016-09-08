@@ -19,6 +19,10 @@ var LoginController = {
 		window.TelepatInstance.on('login', function() {
 			ChatController.render();
 		});
+
+		window.TelepatInstance.on('logout', function() {
+			$('#everything').load('login.html', null, LoginController.ready);
+		});
 						
 		if (localStorage.hasLoggedOut == undefined || localStorage.hasLoggedOut == 'false') {
 			if (window.TelepatInstance.user.canReauth) {
