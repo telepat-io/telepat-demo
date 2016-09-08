@@ -28,7 +28,7 @@ You have two options for this part:
 ##### Messages
 The first kind of object we want to have in our app is the message. A message object should represent a single text message, sent from one user to another. We should also store some information about the message being delivered and seen.
 
-** The structure of a `message` object **
+**The structure of a `message` object**
 
 | Key name       | Type      | Description |
 | -------------- | --------- | ----------- |
@@ -40,7 +40,7 @@ The first kind of object we want to have in our app is the message. A message ob
 ##### Chatrooms
 We also need to implement the typing indicator functionality. Let's create some other objects, that the two participants to a chat can both read and write, so they can communicate with each other. We'll call these chatrooms. 
 
-** The structure of a `chatroom` object **
+**The structure of a `chatroom` object**
 
 | Key name             | Type      | Description |
 | -------------------- | --------- | ----------- |
@@ -54,7 +54,7 @@ We'll also add a `belongsTo` relationship from messages to channels, so that we 
 ##### Tasks
 Finally, we need object representing the tasks being assigned by users to other users. Much like messages, we use them to store data about who the recipient is, the text of the task and its completion status.
 
-** The structure of a `task` object **
+**The structure of a `task` object**
 
 | Key name       | Type      | Description |
 | -------------- | --------- | ----------- |
@@ -137,29 +137,29 @@ Here is the full schema object that needs to be set on the application:
 ### Installing and running the demo
 * Clone the GitHub repository:
 
-      git clone https://github.com/telepat-io/telepat-demo.git
-      cd telepat-demo
+        git clone https://github.com/telepat-io/telepat-demo.git
+        cd telepat-demo
 
 * Install npm and bower dependencies:
 
-      npm install && bower install
+        npm install && bower install
 
 * Configure the app. 
 Rename `src/js/config.example.js` to `src/js/config.js`, and fill in data from the Telepat server instance:
 
-      var TelepatConfig = {
-        apiKey: 'APP-API-KEY',
-        appId: 'APP-ID',
-        apiEndpoint: 'API-URL',
-        socketEndpoint: 'SOCKET-URL',
-        timerInterval: 150,
-        collectionId: 'APP-MAIN-COLLECTION-ID',
-        facebookAppId: '1743490645916155'
-      };
+        var TelepatConfig = {
+            apiKey: 'APP-API-KEY',
+            appId: 'APP-ID',
+            apiEndpoint: 'API-URL',
+            socketEndpoint: 'SOCKET-URL',
+            timerInterval: 150,
+            collectionId: 'APP-MAIN-COLLECTION-ID',
+            facebookAppId: '1743490645916155'
+        };
 
 * Run it using
 
-      gulp
+        gulp
 
 ### Connecting to Telepat
 One of the first things the app does is connect to the Telepat instance:
@@ -202,263 +202,263 @@ One of the first things the chat controller does is create three subscriptions:
 ##### Users list
 * First, to the application users. After getting the list of users, we can render the list of profiles in the left column. Anytime a new user is added, we update the interface by adding a new DOM element for that user.
 
-      ChatController.usersChannel = TelepatInstance.subscribe({
-        channel: {
-          model: 'user'
-        },
-        sort: {
-          name: 'asc'
-        }
-      }, function() {
-        ChatController.updateUserList();
-        ChatController.usersChannel.on('update', function(opType, userId, object) {
-          if(opType == 'add')
-            ChatController.insertUser(object);
+        ChatController.usersChannel = TelepatInstance.subscribe({
+            channel: {
+                model: 'user'
+            },
+            sort: {
+                name: 'asc'
+            }
+        }, function() {
+            ChatController.updateUserList();
+            ChatController.usersChannel.on('update', function(opType, userId, object) {
+            if(opType == 'add')
+                ChatController.insertUser(object);
+            });
         });
-      });
 
 ##### Typing indicators
 * Next, a subscription to all messaging channels where the currently logged user is one of the participants.
 
-      ChatController.ChatroomChannel = TelepatInstance.subscribe({
-        channel: {
-          model: 'chatroom',
-          context: TelepatConfig.collectionId
-        },
-        filters: {
-          or: [
-            {
-              is: {
-                participant_1: TelepatInstance.user.data.id,
-              }
+        ChatController.ChatroomChannel = TelepatInstance.subscribe({
+            channel: {
+                model: 'chatroom',
+                context: TelepatConfig.collectionId
             },
-            {
-              is: {
-                participant_2: TelepatInstance.user.data.id,
-              }
+            filters: {
+                or: [
+                    {
+                        is: {
+                            participant_1: TelepatInstance.user.data.id,
+                        }
+                    },
+                    {
+                        is: {
+                            participant_2: TelepatInstance.user.data.id,
+                        }
+                    }
+                ]
             }
-          ]
-        }
-      });
+        });
 
 * We use channel objects to store and transmit information about which user is currently typing.
 
-      ChatController.ChatroomChannel.on('update', function(opType, id, object, patch) {
-        //we're only interested in the chatrooms where I am a participant
-        if (ChatController.recipient && (object.participant_1 == ChatController.recipient.id || object.participant_2 == ChatController.recipient.id)) {
-          if (opType == 'replace') {
-            //changes on this field name indicate when the other user is typing
-            var isTypingField = ChatController.currentChatroom.user_id == TelepatInstance.user.data.id ? 'recipient_is_typing' : 'sender_is_typing';
+        ChatController.ChatroomChannel.on('update', function(opType, id, object, patch) {
+            //we're only interested in the chatrooms where I am a participant
+            if (ChatController.recipient && (object.participant_1 == ChatController.recipient.id || object.participant_2 == ChatController.recipient.id)) {
+                if (opType == 'replace') {
+                    //changes on this field name indicate when the other user is typing
+                    var isTypingField = ChatController.currentChatroom.user_id == TelepatInstance.user.data.id ? 'recipient_is_typing' : 'sender_is_typing';
 
-            if (isTypingField == patch.path) {
-              if (ChatController.ChatroomChannel.objects[id][patch.path] == true) {
-                // Create the dots typing indicator
-              }
-              else if (ChatController.ChatroomChannel.objects[id][patch.path] == false) {
-                // Remove the dots typing indicator
-              }
+                    if (isTypingField == patch.path) {
+                        if (ChatController.ChatroomChannel.objects[id][patch.path] == true) {
+                            // Create the dots typing indicator
+                        } else if (ChatController.ChatroomChannel.objects[id][patch.path] == false) {
+                            // Remove the dots typing indicator
+                        }
+                    }
+                }
             }
-          }
-        }
-      });
+        });
 
 * We build methods to set typing information for the current user as well. Notice that we only need to set the proper value on the channel object - the change is picked up and signaled to Telepat by the SDK.
 
-      /**
-       * sends the is typing property on the chatroom that tells when the other participant has started typing
-       */
-      sendIsTyping: function() {
-        var isTypingField = ChatController.currentChatroom.user_id == TelepatInstance.user.data.id ? 'sender_is_typing' : 'recipient_is_typing';
-        ChatController.ChatroomChannel.objects[ChatController.currentChatroom.id][isTypingField] = true;
-        ChatController.isTypingTimeout = setTimeout(ChatController.clearIsTyping, 3000);
-      },
-      /**
-       * clears this flag when at least 3 seconds have passed since the last key pressed
-       */
-      clearIsTyping: function() {
-        var isTypingField = ChatController.currentChatroom.user_id == TelepatInstance.user.data.id ? 'sender_is_typing' : 'recipient_is_typing';
-        ChatController.ChatroomChannel.objects[ChatController.currentChatroom.id][isTypingField] = false;
-        clearTimeout(ChatController.isTypingTimeout);
-        ChatController.isTypingTimeout = null;
-      },
+        /**
+        * sends the is typing property on the chatroom that tells when the other participant has started typing
+        */
+        sendIsTyping: function() {
+            var isTypingField = ChatController.currentChatroom.user_id == TelepatInstance.user.data.id ? 'sender_is_typing' : 'recipient_is_typing';
+            ChatController.ChatroomChannel.objects[ChatController.currentChatroom.id][isTypingField] = true;
+            ChatController.isTypingTimeout = setTimeout(ChatController.clearIsTyping, 3000);
+        },
+        
+        /**
+        * clears this flag when at least 3 seconds have passed since the last key pressed
+        */
+        clearIsTyping: function() {
+            var isTypingField = ChatController.currentChatroom.user_id == TelepatInstance.user.data.id ? 'sender_is_typing' : 'recipient_is_typing';
+            ChatController.ChatroomChannel.objects[ChatController.currentChatroom.id][isTypingField] = false;
+            clearTimeout(ChatController.isTypingTimeout);
+            ChatController.isTypingTimeout = null;
+        }
 
 ##### Unread count
 * Finally, we subscribe to all incoming messages, then check for the `unseen` object property to see how many unread messages we have from each user:
 
-      ChatController.AllMessagesChannel = TelepatInstance.subscribe({
-        channel: {
-          model: 'message',
-          context: TelepatConfig.collectionId
-        },
-        filters: {
-          and: [
-            {
-              is: {
-                recipient_id: TelepatInstance.user.data.id,
-              }
+        ChatController.AllMessagesChannel = TelepatInstance.subscribe({
+            channel: {
+                model: 'message',
+                context: TelepatConfig.collectionId
+            },
+            filters: {
+                and: [
+                    {
+                        is: {
+                            recipient_id: TelepatInstance.user.data.id,
+                        }
+                    }
+                ]
             }
-          ]
-        }
-      }, function() {
-        //iterate through all messages, check for unseen
-        for (var messageId in ChatController.AllMessagesChannel.objects) {
-          // ...
-        }
-        //update all chat badges based on the unread counts
-      });
+        }, function() {
+            //iterate through all messages, check for unseen
+            for (var messageId in ChatController.AllMessagesChannel.objects) {
+                // ...
+            }
+            //update all chat badges based on the unread counts
+        });
 
 * Anytime a new message is received, we want to:
   * Mark it as received (do this as soon as possible, even if the sender is not our current chat partner);
   * Update the unread badge count, if necessary.
 
-        ChatController.AllMessagesChannel.on('update', function(opType, id, object, patch) {
-          //set the message to received while we're online, even if we're not on the right channel
-          object.received = true;
-          if (!ChatController.recipient || object.user_id !== ChatController.recipient.id) {
-            if (opType === 'add') {
-              //there's a new message from a user different than the one we're chatting with, update the badge count
-              if (!ChatController.badgeCount[object.user_id]) {
-                ChatController.badgeCount[object.user_id] = 1;
-              } else {
-                ChatController.badgeCount[object.user_id]++;
-              }
-              ChatController.updateBadgeCountForUser(object.user_id);
-              ChatController.newMessageSound.play();
-            }
-          }
-        });
+            ChatController.AllMessagesChannel.on('update', function(opType, id, object, patch) {
+                //set the message to received while we're online, even if we're not on the right channel
+                object.received = true;
+                if (!ChatController.recipient || object.user_id !== ChatController.recipient.id) {
+                    if (opType === 'add') {
+                        //there's a new message from a user different than the one we're chatting with, update the badge count
+                        if (!ChatController.badgeCount[object.user_id]) {
+                            ChatController.badgeCount[object.user_id] = 1;
+                        } else {
+                            ChatController.badgeCount[object.user_id]++;
+                        }
+                        ChatController.updateBadgeCountForUser(object.user_id);
+                        ChatController.newMessageSound.play();
+                    }
+                }
+            });
 
 ##### Chat messages
 * Anytime the user clicks on of the profiles in the left column, we subscribe to messages that correspond to the chatroom object shared by the two participants to the chat. After getting the ordered messages objects, we need to add them to the interface, and mark them as both delivered and seen.
 
-      ChatController.MessagesChannel = TelepatInstance.subscribe({
-        channel: {
-          model: 'message',
-          parent: {
-            model: 'chatroom',
-            id: chatroomId
-          }
-        },
-        sort: {
-          created: 'asc'
-        }
-      }, function() {
-        //inserting messages into the DOM from the initial subscribe
-        for(var msgId = 0; msgId < ChatController.MessagesChannel.objectsArray.length; msgId++) {
-          var object = ChatController.MessagesChannel.objectsArray[msgId];
+        ChatController.MessagesChannel = TelepatInstance.subscribe({
+            channel: {
+                model: 'message',
+                parent: {
+                    model: 'chatroom',
+                    id: chatroomId
+                }
+            },
+            sort: {
+                created: 'asc'
+            }
+        }, function() {
+            //inserting messages into the DOM from the initial subscribe
+            for(var msgId = 0; msgId < ChatController.MessagesChannel.objectsArray.length; msgId++) {
+                var object = ChatController.MessagesChannel.objectsArray[msgId];
           
-          if (object.user_id == TelepatInstance.user.data.id)
-            ChatController.insertFromMessage(object);
-          else
-            ChatController.insertToMessage(object);
+                if (object.user_id == TelepatInstance.user.data.id)
+                    ChatController.insertFromMessage(object);
+                else
+                    ChatController.insertToMessage(object);
 
-          object.received = true;
-          object.seen = true;
-        }
-      });
+                object.received = true;
+                object.seen = true;
+            }
+        });
 
 * There are two types of relevant updates to MessagesChannel objects that we need to listen to:
   * New messages coming in;
   * Updates about existing messages becoming delivered/seen.
 
-        ChatController.MessagesChannel.on('update', function(opType, id, message, patch) {
-          if (opType == 'add') {
-            //messages sent by me are also signaled here, after the create request has been processed
-            if (message.user_id == TelepatInstance.user.data.id)  {
-              ChatController.insertFromMessage(message);
-            } //otherwise it's the from my partner
-            else {
-              //set this message as delivered
-              ChatController.MessagesChannel.objects[id].received = true;
-              ChatController.insertToMessage(message);
+            ChatController.MessagesChannel.on('update', function(opType, id, message, patch) {
+                if (opType == 'add') {
+                    //messages sent by me are also signaled here, after the create request has been processed
+                    if (message.user_id == TelepatInstance.user.data.id)  {
+                        ChatController.insertFromMessage(message);
+                    } //otherwise it's the from my partner
+                    else {
+                        //set this message as delivered
+                        ChatController.MessagesChannel.objects[id].received = true;
+                        ChatController.insertToMessage(message);
 
-              //also, if the input message element is in focus, we set the message as seen
-              if (document.activeElement.parentElement.id == 'message_input_container') {
-                ChatController.MessagesChannel.objects[ChatController.lastHisMessageId].seen = true;
-              }
-            }
-          } else if (opType == 'replace') {
-            //this is how we capture the 'received' and 'seen' changes on each message
-            if (patch.path == 'received' && ChatController.MessagesChannel.objects[id].user_id == TelepatInstance.user.data.id)
-              ChatController.setMessageDelivered(id);
-            else if (patch.path == 'seen' && ChatController.MessagesChannel.objects[id].user_id == TelepatInstance.user.data.id) {
-              ChatController.setSeen();
-            }
-          }
-        });
+                        //also, if the input message element is in focus, we set the message as seen
+                        if (document.activeElement.parentElement.id == 'message_input_container') {
+                            ChatController.MessagesChannel.objects[ChatController.lastHisMessageId].seen = true;
+                        }
+                    }
+                } else if (opType == 'replace') {
+                    //this is how we capture the 'received' and 'seen' changes on each message
+                    if (patch.path == 'received' && ChatController.MessagesChannel.objects[id].user_id == TelepatInstance.user.data.id)
+                        ChatController.setMessageDelivered(id);
+                    else if (patch.path == 'seen' && ChatController.MessagesChannel.objects[id].user_id == TelepatInstance.user.data.id) {
+                        ChatController.setSeen();
+                    }
+                }
+            });
 
 * Creating a new message is really simple, just add it to the `objects` property of a channel, under a random, new key. 
 
   The change will be picked up by the monitoring system, so the object will vanish from `objects` for the moment, to be re-added under the proper id when Telepat finishes processing the update and signals back to the client. We're already capturing and adding all new messages from subscribing to `update` before, so it boils down to:
 
-      ChatController.MessagesChannel.objects['new'] = {
-        text: textMessage,
-        recipient_id: ChatController.recipient.id,
-        context_id: TelepatConfig.collectionId,
-        chatroom_id: ChatController.currentChatroom.id
-      }
+        ChatController.MessagesChannel.objects['new'] = {
+            text: textMessage,
+            recipient_id: ChatController.recipient.id,
+            context_id: TelepatConfig.collectionId,
+            chatroom_id: ChatController.currentChatroom.id
+        }
 
 ##### Implementing tasks
 * Just like with messages, we first subscribe to the tasks we need, and then we update the interface. We'll use filters for this subscription:
 
-      TasksController[which] = TelepatInstance.subscribe({
-        channel: {
-          model: 'task',
-          context: TelepatConfig.collectionId
-        },
-        filters: {
-          and: [
-            {
-              is: {
-                user_id: where == 'from' ? ChatController.recipient.id : TelepatInstance.user.data.id,
-              }
+        TasksController[which] = TelepatInstance.subscribe({
+            channel: {
+                model: 'task',
+                context: TelepatConfig.collectionId
             },
-            {
-              is: {
-                recipient_id: where == 'from' ? TelepatInstance.user.data.id : ChatController.recipient.id
-              }
+            filters: {
+                and: [
+                    {
+                        is: {
+                            user_id: where == 'from' ? ChatController.recipient.id : TelepatInstance.user.data.id,
+                        }
+                    },
+                    {
+                        is: {
+                            recipient_id: where == 'from' ? TelepatInstance.user.data.id : ChatController.recipient.id
+                        }
+                    }
+                ]
             }
-          ]
-        }
-      }, function() {
-        for(var id in TasksController[which].objects) {
-          var task = TasksController[which].objects[id];
+        }, function() {
+            for(var id in TasksController[which].objects) {
+                var task = TasksController[which].objects[id];
 
-          TasksController.insertTask(task, where);
-        }
-      });
+                TasksController.insertTask(task, where);
+            }
+        });
 
 * We listen for update events on the channel, and we filter out 3 possible operations:
   * A task property has been replaced, and that can be the `completed` key signaling a task has been completed
   * A task has been added, and the UI needs updating
   * A task has been deleted, and the UI needs updating
 
-        TasksController[which].on('update', function(opType, id, object, patch) {
-          if (opType == 'replace') {
-            //this happens when we click on the completed checkbox
-            if (patch.path == 'completed') {
-              // Update UI to indicate complete task
-            }
-          } else if (opType == 'add') {
-            // Insert the new task in the UI
-          //when tasks are deleted
-          } else if (opType == 'delete') {
-            // Remove task from UI
-          }
-        });
+            TasksController[which].on('update', function(opType, id, object, patch) {
+                if (opType == 'replace') {
+                    //this happens when we click on the completed checkbox
+                    if (patch.path == 'completed') {
+                        // Update UI to indicate complete task
+                    }
+                } else if (opType == 'add') {
+                    // Insert the new task in the UI
+                    //when tasks are deleted
+                } else if (opType == 'delete') {
+                    // Remove task from UI
+                }
+            });
 
 * Adding a new task is as easy as adding a new message:
 
-      TasksController.TheirTasksChannel.objects['new'] = {
-        text: taskText,
-        completed: false,
-        recipient_id: ChatController.recipient.id
-      };
+        TasksController.TheirTasksChannel.objects['new'] = {
+            text: taskText,
+            completed: false,
+            recipient_id: ChatController.recipient.id
+        };
 
 * Completing a task means setting its `completed` property to true. The change will be propagated by the SDK and Telepat.
 
-      TasksController.MyTasksChannel.objects[id].completed = true;
+        TasksController.MyTasksChannel.objects[id].completed = true;
 
 * And removing a task means deleting its object from the collection.
 
-      delete TasksController.MyTasksChannel.objects[id];
+        delete TasksController.MyTasksChannel.objects[id];
