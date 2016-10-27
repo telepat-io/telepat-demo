@@ -26,6 +26,6 @@
     "tests"
   ],
   "dependencies": {
-    "telepat-js"
+    "telepat-js": "*"
   }
 }
